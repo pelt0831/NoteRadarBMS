@@ -1,4 +1,7 @@
+import java.io.IOException;
 import java.nio.file.Path;
+
+import ChartModel.Timeline;
 
 public abstract class ChartDecoder {
     int lntype;
@@ -12,6 +15,14 @@ public abstract class ChartDecoder {
 			//return new OSUDecoder(BMSModel.LNTYPE_LONGNOTE);
 		}
 		return null;
+	}
+
+	public Timeline decode()throws IOException{
+		return null;
+	}
+
+	public void print(){
+
 	}
 
 }

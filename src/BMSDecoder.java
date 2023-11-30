@@ -1,37 +1,103 @@
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.logging.Logger;
+
+import ChartModel.Section;
+import ChartModel.Timeline;
+import ChartModel.Lane.LaneID;
 
 public class BMSDecoder extends ChartDecoder{
+    //File path
+    String filePath = "C:\\Users\\VRLABS\\Documents\\GitHub\\textage2bms\\RejectionGirl.bms";
+
+    //Class Container
+    Timeline timeLine = new Timeline();
+
+    //Parsing Util
+    private int[] sted = {0,0,0,0,0,0,0,0};
+    int id[] = {1,2,3,4,5,6,7,8};
+    LaneID LID = new LaneID();
+
+
     public BMSDecoder(){
-        try {
-            this.decode();            
-        } catch (Exception e) {
-            System.out.println("??");
-        }
+        // try {
+        //     this.decode();        
+        // } catch (Exception e) {
+        //     System.out.println("BMS Decode Failed");
+        // }
 
     }
 
-    public void decode()throws IOException{
-        Path path = Paths.get("C:\\Users\\VRLABS\\Documents\\GitHub\\textage2bms\\rootage.bms");
-        // byte[] data = Files.readAllBytes(path);
-        FileInputStream fStream = new FileInputStream("C:\\Users\\BOCCHI_THE_LAPTOP\\Documents\\GitHub\\textage2bms\\rootage.bms");
+    private void TrimChange(int i){
+        if(sted[i]==0){
+            sted[i] = 2;
+        }else if(sted[i] == 2){
+            sted[i] = 1;
+        }else if(sted[i] == 1){
+            sted[i] = 0;
+        }
+    }
+
+    private void LaneParseNote(String yy, String Bar){
+        int iid = LID.sid.get(yy);
+        //for Each notes
+        for(int i=0;i<Bar.length()/2; i++){
+            String ii = Bar.substring(i*2, i*2+2);
+            if(!ii.equals("00")){
+                // System.out.println(i);
+                timeLine.Sections.getLast().addNotes(iid, i);
+            }
+        }
+    }
+
+    private void ChargeLaneParseNote(String yy, String Bar){
+        int iid = LID.csid.get(yy);
+        //for Each notes
+        for(int i=0;i<Bar.length()/2; i++){
+            String ii = Bar.substring(i*2, i*2+2);
+            if(!ii.equals("00")){
+                // System.out.println(i);
+                if(sted[iid-41]==2)//if longnote is connected
+                    TrimChange(iid-41);
+                timeLine.Sections.getLast().addNotes(iid, i, sted[iid-41]);
+                TrimChange(iid-41);
+            }else{
+                if(i==0 && sted[iid-41]==2){//connected for independent section
+                    timeLine.Sections.getLast().addNotes(iid, i, 2);
+                }
+            }
+        }
+    }
+
+    private void SOFLANParse(String yy, String Bar){
+        int iid = LID.sofid.get(yy);
+        if(iid == 13){
+            //for Each notes
+            for(int i=0;i<Bar.length()/2; i++){
+                String ii = Bar.substring(i*2, i*2+2);
+                if(!ii.equals("00")){
+                    //HEX to DEC
+                    int bpm = Integer.parseInt(ii, 16);
+                    System.out.println(bpm);
+                    timeLine.Sections.getLast().addNotes(iid, i, bpm);
+                }
+            }
+        }
+        else if(iid == 18){
+
+        }
+    }
+
+    @Override
+    public Timeline decode()throws IOException{
+        FileInputStream fStream = new FileInputStream(filePath);
         InputStreamReader iStreamReader = new InputStreamReader(fStream, "UTF-16");
         BufferedReader br = new BufferedReader(iStreamReader);
+        timeLine.filePath = filePath;
         String line;
         boolean isData = false;
-        ArrayList<Section> TimeLine = new ArrayList<>();
-        String sid[] = {"11","12","13","14","15","18","19","16"};
-
+        
 
         while((line = br.readLine())!=null){
             int pos = 0;
@@ -75,91 +141,37 @@ public class BMSDecoder extends ChartDecoder{
                     if(Bar.length()%2 != 0){
                         System.out.println("Data Field Error Has occured");
                     }
-                    if(TimeLine.isEmpty() || TimeLine.getLast().getIndex() <= xxxi){
-                        TimeLine.add(new Section(xxxi, Bar.length()%2, 7, null))
+                    if(timeLine.Sections.isEmpty() || timeLine.Sections.getLast().getIndex() < xxxi){
+                        // System.out.println();
+                        timeLine.Sections.add(new Section(xxxi, Bar.length()/2, 8, id));
                     }
-                    if(yy == "11"){
-                        for(int i=0;i<Bar.length()/2; i++){
-                            String ii = Bar.substring(i*2, i*2+2);
-                            if(ii != "00"){
-                                TimeLine.getLast();
-                            }
-                        }
+                    try{//Parse normal Note
+                        int test = LID.sid.get(yy);
+                        LaneParseNote(yy, Bar);
+                    }catch(Exception e){
                     }
-                    if(yy == "12"){
-                        for(int i=0;i<Bar.length()/2; i++){
-                            String ii = Bar.substring(i*2, i*2+2);
-                            if(ii != "00"){
-                                FullLane.get(0).addNotes(Integer.parseInt(xxx),Bar.length()/2,i);
-                            }
-                        }
+                    try{// Parse Charge Note
+                        int test = LID.csid.get(yy);
+                        ChargeLaneParseNote(yy, Bar);
+                    }catch(Exception e){
                     }
-                    if(yy == "13"){
-                        for(int i=0;i<Bar.length()/2; i++){
-                            String ii = Bar.substring(i*2, i*2+2);
-                            if(ii != "00"){
-                                FullLane.get(0).addNotes(Integer.parseInt(xxx),Bar.length()/2,i);
-                            }
-                        }
+                    try {
+                        int test = LID.sofid.get(yy);
+                        SOFLANParse(yy, Bar);
+                    } catch (Exception e) {
+                        // TODO: handle exception
                     }
-                    if(yy == "14"){
-                        for(int i=0;i<Bar.length()/2; i++){
-                            String ii = Bar.substring(i*2, i*2+2);
-                            if(ii != "00"){
-                                FullLane.get(0).addNotes(Integer.parseInt(xxx),Bar.length()/2,i);
-                            }
-                        }
-                    }
-                    if(yy == "15"){
-                        for(int i=0;i<Bar.length()/2; i++){
-                            String ii = Bar.substring(i*2, i*2+2);
-                            if(ii != "00"){
-                                FullLane.get(0).addNotes(Integer.parseInt(xxx),Bar.length()/2,i);
-                            }
-                        }
-                    }
-                    if(yy == "18"){
-                        for(int i=0;i<Bar.length()/2; i++){
-                            String ii = Bar.substring(i*2, i*2+2);
-                            if(ii != "00"){
-                                FullLane.get(0).addNotes(Integer.parseInt(xxx),Bar.length()/2,i);
-                            }
-                        }
-                    }
-                    if(yy == "19"){
-                        for(int i=0;i<Bar.length()/2; i++){
-                            String ii = Bar.substring(i*2, i*2+2);
-                            if(ii != "00"){
-                                FullLane.get(0).addNotes(Integer.parseInt(xxx),Bar.length()/2,i);
-                            }
-                        }
-                    }
-                    if(yy == "16"){
-                        for(int i=0;i<Bar.length()/2; i++){
-                            String ii = Bar.substring(i*2, i*2+2);
-                            if(ii != "00"){
-                                FullLane.get(0).addNotes(Integer.parseInt(xxx),Bar.length()/2,i);
-                            }
-                        }
-                    }
-                    
-
-
-                    System.out.println(xxx+""+yy+" "+Bar.length());
-                    
-                    //SCRATCH = 16
-                    //1 == 
-                    //2 == 
-                    //3 == 
-                    //4 == 
-                    //5 == 
-                    //6 == 
-                    //7 == 
                 }
             }
-            //if(line.length() < 30){System.out.println(pos+""+line);}
         }
-        final long time = System.currentTimeMillis();
-        
+        return timeLine;
+    }
+
+    public void print(){
+        for(int i=0; i<timeLine.Sections.size(); i++){
+            Section section = timeLine.Sections.get(i);
+            section.print();
+            System.out.println("////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////");
+        }
     }
 }

@@ -1,6 +1,10 @@
 import java.util.HashMap;
 import java.util.Map;
 
+import ChartModel.Lane.AbstractLane;
+import ChartModel.Note.NormalNote;
+import ChartModel.Note.Note;
+
 public class BMSMetaData implements Comparable{
     //show player number
 	private int player;
@@ -316,10 +320,10 @@ public class BMSMetaData implements Comparable{
 		return new EventLane(this);
 	}	
 
-	public Lane[] getLanes() {
-		Lane[] lanes = new Lane[mode.key];
+	public AbstractLane[] getLanes() {
+		AbstractLane[] lanes = new AbstractLane[mode.key];
 		for(int i = 0;i < lanes.length;i++) {
-			lanes[i] = new Lane(this, i);
+			lanes[i] = new AbstractLane(this, i);
 		}
 		return lanes;
 	}
