@@ -81,13 +81,8 @@ public class BMSDecoder extends ChartDecoder{
                     if(yy == "11"){
                         for(int i=0;i<Bar.length()/2; i++){
                             String ii = Bar.substring(i*2, i*2+2);
-                            int sind = FullLane.get(0).SectionLastIndex();
-                            int barxxx = Integer.parseInt(xxx);
                             if(ii != "00"){
-                                if(sind <= barxxx){
-                                    FullLane.get(sind)
-                                }
-                                FullLane.get(0).addNotes(Integer.parseInt(xxx),Bar.length()/2,i);
+                                TimeLine.getLast();
                             }
                         }
                     }
