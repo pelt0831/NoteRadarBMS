@@ -1,10 +1,8 @@
 package ChartModel.Iterator;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 import ChartModel.Section;
-import ChartModel.Lane.AbstractLane;
 import ChartModel.Lane.LaneID;
 import ChartModel.Note.Note;
 
@@ -20,42 +18,81 @@ public class ConcreteIterator implements Iterator{
     }
 
     @Override
-    public int hasNext() throws Exception{
-        int minTiming=9999999;
+    public boolean hasNext() throws Exception{
+        // TODO Auto-generated method stub
         for (Section section : Sections) {
-            if(playsection >= section.getIndex())continue;
-            if(playsection < section.getIndex())playtiming = 0;
+            int minTiming=9999999;
+            if(playsection > section.getIndex())continue;
+            if(playsection < section.getIndex()){
+                playtiming = 0;
+                playsection = section.getIndex();
+            }
             //assume we arrived at target section
             for (Integer timing : section.timinglib) {
                 if (playtiming < timing) {
                     minTiming = minTiming>timing?timing:minTiming;
                 }
             };
-            if(minTiming != 9999999){
-                return minTiming;
+            if(minTiming != 9999999){//there is next notes in one section
+                return true;
             }
         }
-        return -1;
+        return false;
     }
 
     @Override
     public ArrayList<Note> Next() {
+        ArrayList<Note> temp = new ArrayList<>();
         // TODO Auto-generated method stub
-        int minTiming=9999999;
         for (Section section : Sections) {
-            if(playsection >= section.getIndex())continue;
-            if(playsection < section.getIndex()){playtiming = 0;playsection = section.getIndex()}
+            int minTiming=9999999;
+            if(playsection > section.getIndex())continue;
+            if(playsection < section.getIndex()){
+                playtiming = 0;
+                playsection = section.getIndex();
+            }
             //assume we arrived at target section
             for (Integer timing : section.timinglib) {
                 if (playtiming < timing) {
                     minTiming = minTiming>timing?timing:minTiming;
                 }
             };
-            if(minTiming != 9999999){
-                //export Notes
+            if(minTiming != 9999999){//there is next notes in one section
+                playtiming = minTiming;
+                //for each lane
+                for (Integer sid : LID.SIDint) {//check normal note
+                    try {
+                        Note tNote = section.Lanes.get(sid).notes.get(minTiming);
+                        temp.add(tNote);
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                        temp.add(null);
+                    }
+                }
+                for (Integer sid : LID.CSIDint) {//check normal note
+                    try {
+                        Note tNote = section.Lanes.get(sid).notes.get(minTiming);
+                        temp.add(tNote);
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                        temp.add(null);
+                    }
+                }
 
+                //make seperate?
+                for (Integer sid : LID.SOFIDint) {//check normal note
+                    try {
+                        Note tNote = section.Lanes.get(sid).notes.get(minTiming);
+                        temp.add(tNote);
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                        temp.add(null);
+                    }
+                }
+                return temp;
             }
         }
+        return null;
     }
 
     @Override

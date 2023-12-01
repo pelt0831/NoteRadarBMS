@@ -16,6 +16,6 @@ public class ChargeLane extends AbstractLane{
 
     @Override
     public void addNotes(int ii, int section, int sted){
-        super.notes.put(ii, new ChargeNote(ii, section, sted));
+        super.notes.put(ii, new ChargeNote(ii, section, super.getId(),sted));
     }
 }

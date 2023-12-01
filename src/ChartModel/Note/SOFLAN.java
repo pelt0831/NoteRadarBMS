@@ -2,8 +2,8 @@ package ChartModel.Note;
 public class SOFLAN extends Note {
     private int BPM;
 
-    public SOFLAN(int ii, int section,int bpm){
-        super(ii, section);
+    public SOFLAN(int ii, int section, int lane, int bpm){
+        super(ii, section, lane);
         this.BPM = bpm;
     }
 

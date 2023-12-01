@@ -2,6 +2,7 @@ package ChartModel;
 import java.util.ArrayList;
 
 import ChartModel.Iterator.Aggregate;
+import ChartModel.Iterator.ConcreteIterator;
 import ChartModel.Iterator.Iterator;
 
 public class Timeline implements Aggregate{
@@ -19,6 +20,6 @@ public class Timeline implements Aggregate{
     @Override
     public Iterator iterator() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'iterator'");
+        return new ConcreteIterator(Sections);
     }
 }

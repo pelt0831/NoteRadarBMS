@@ -2,8 +2,8 @@ package ChartModel.Note;
 public class ChargeNote extends Note{
     private int trim; //0:start, 1:end 2:connected
 
-    public ChargeNote(int ii, int section, int sted){
-        super(ii, section);
+    public ChargeNote(int ii, int section, int lane, int sted){
+        super(ii, section, lane);
         this.trim = sted;
     }
 

@@ -15,6 +15,6 @@ public class SOFLANLane extends AbstractLane{
 
     @Override
     public void addNotes(int ii, int section, int sted){
-        super.notes.put(ii, new SOFLAN(ii, section, sted));
+        super.notes.put(ii, new SOFLAN(ii, section, super.getId(),sted));
     }
 }

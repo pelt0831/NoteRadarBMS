@@ -15,6 +15,6 @@ public class NormalLane extends AbstractLane{
 
     @Override
     public void addNotes(int ii, int section){
-        super.notes.put(ii, new NormalNote(ii, section));
+        super.notes.put(ii, new NormalNote(ii, section,super.getId()));
     }
 }
