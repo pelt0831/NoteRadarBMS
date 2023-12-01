@@ -11,7 +11,9 @@ public class Client {
         System.out.println("hey");
         ChartDecoder decoder = new BMSDecoder();
         Timeline timeline = decoder.decode();
-        // timeline.print();
+        timeline.print();
+        //Iterator Print Examples
+        /* 
         Iterator iterator = timeline.iterator();
         int [] count = {1,1,1,1,1,1,1,1,1};
         while (iterator.hasNext()) {
@@ -52,7 +54,7 @@ public class Client {
                 }
             }
             System.out.println();
-        }
+        }*/
     }
     
 }

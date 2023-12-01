@@ -9,7 +9,7 @@ import ChartModel.Lane.LaneID;
 
 public class BMSDecoder extends ChartDecoder{
     //File path
-    String filePath = "C:\\Users\\VRLABS\\Documents\\GitHub\\textage2bms\\RejectionGirl.bms";
+    String filePath = "C:\\Users\\VRLABS\\Documents\\GitHub\\textage2bms\\Ariah.bms";
 
     //Class Container
     Timeline timeLine = new Timeline();
