@@ -7,6 +7,7 @@ import java.util.List;
 public class LaneID {
     public HashMap<String, Integer>sid= new HashMap<>(){{
         put("11",1);put("12",2);put("13",3);put("14",4);put("15",5);put("18",6);put("19",7);put("16",8);
+        put("36",1);put("109",2);put("182",3);put("256",4);put("329",5);put("402",6);put("475",7);
     }};
     public HashMap<String, Integer>csid = new HashMap<>(){{
         put("51",41);put("52",42);put("53",43);put("54",44);put("55",45);put("58",46);put("59",47);put("56",48);

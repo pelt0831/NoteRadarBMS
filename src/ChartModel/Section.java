@@ -17,6 +17,7 @@ public class Section {
     public Set<Integer> timinglib = new HashSet<>();
 
     public Section(int section, int nn, int lnum, int[] ids){
+        // System.out.println("section added!! "+ section);
         this.index = section;
         this.nn = nn;
         Lanes = new HashMap<>();

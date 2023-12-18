@@ -12,7 +12,7 @@ public abstract class ChartDecoder {
 		if (s.endsWith(".bms")) {
 			return new BMSDecoder();
 		} else if (s.endsWith(".osu")) {
-			//return new OSUDecoder(BMSModel.LNTYPE_LONGNOTE);
+			return new OSUDecoder();
 		}
 		return null;
 	}
