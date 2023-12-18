@@ -1,6 +1,7 @@
-import ChartModel.Timeline;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import ChartModel.Timeline;
 import ChartModel.Iterator.Iterator;
 import ChartModel.Note.Note;
 import ChartModel.Note.SOFLAN;
@@ -8,8 +9,8 @@ import ChartModel.Note.SOFLAN;
 public class chargeAlgorithm implements Algorithm {
 	public float work() {
 		float maxChargeDifficulty = (float) 0.01;
-		float paramCount = 0;
-		float barCount = 0;
+		float chargeCount = 0;
+		float barCount = 100;
 		float param = 0;
 		try {
 			// System.out.println("hey");
@@ -44,14 +45,13 @@ public class chargeAlgorithm implements Algorithm {
 									ouString = "□";
 							}
 						} else if (lanenum > 40) {
+							chargeCount++;
 							if (note.getTrim() == 2) {
 								ouString = "|";
 							} else {
 								if (lanenum % 2 != 0) {
-									paramCount++;
 									ouString = "◆";
 								} else {
-									paramCount++;
 									ouString = "◇";
 								}
 							}
@@ -68,7 +68,7 @@ public class chargeAlgorithm implements Algorithm {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		param = paramCount / barCount / maxChargeDifficulty * 100;
+		param = chargeCount / barCount / maxChargeDifficulty * 100;
 		return param;
 	}
 

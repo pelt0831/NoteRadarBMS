@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import ChartModel.Timeline;
 import ChartModel.Iterator.Iterator;
 import ChartModel.Note.Note;
+import ChartModel.Note.SOFLAN;
 
 public class peakAlgorithm implements Algorithm {
 	public float work() {

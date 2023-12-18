@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import ChartModel.Timeline;
 import ChartModel.Iterator.Iterator;
 import ChartModel.Note.Note;
+import ChartModel.Note.SOFLAN;
 
 public class scratchAlgorithm implements Algorithm {
 	public float work() {
 		float maxScratchDifficulty = (float) 1;
-		float paramCount = 0;
-		float barCount = 0;
+		float scratchCount = 0;
+		float barCount = 100;
 		float param = 0;
 		try {
 			// System.out.println("hey");
@@ -22,8 +23,10 @@ public class scratchAlgorithm implements Algorithm {
 			int[] count = { 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 			while (iterator.hasNext()) {
 				ArrayList<Note> linNotes = iterator.Next();
+				// count[] 원소 삽입
+				if (count[8] > 0)
+					scratchCount++;
 				for (Note note : linNotes) {
-					barCount++;
 					if (note == null) {
 						// System.out.print(" ");
 						continue;
@@ -38,13 +41,10 @@ public class scratchAlgorithm implements Algorithm {
 							if (count[lanenum] == 2) {
 								ouString = "|";
 							} else {
-								if (barCount % 9 == 0)
-									paramCount++;
-								if (lanenum % 2 != 0) {
-									paramCount++;
-								} else {
-									paramCount++;
-								}
+								if (lanenum % 2 != 0)
+									ouString = "■";
+								else
+									ouString = "□";
 							}
 						} else if (lanenum > 40) {
 							if (note.getTrim() == 2) {
@@ -69,7 +69,7 @@ public class scratchAlgorithm implements Algorithm {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		param = paramCount / barCount / maxScratchDifficulty * 100;
+		param = scratchCount / barCount / maxScratchDifficulty * 100;
 		return param;
 	}
 

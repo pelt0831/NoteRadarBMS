@@ -8,9 +8,9 @@ import ChartModel.Note.SOFLAN;
 
 public class notesAlgorithm implements Algorithm {
 	public float work() {
-		float maxNotesDifficulty = (float) 0.2;
-		float paramCount = 0;
-		float barCount = 0;
+		float maxNotesDifficulty = (float) 1;
+		float notesCount = 0;
+		float barCount = 100;
 		float param = 0;
 		try {
 			// System.out.println("hey");
@@ -24,7 +24,6 @@ public class notesAlgorithm implements Algorithm {
 			while (iterator.hasNext()) {
 				ArrayList<Note> linNotes = iterator.Next();
 				for (Note note : linNotes) {
-					barCount++;
 					if (note == null) {
 						// System.out.print(" ");
 						continue;
@@ -39,13 +38,11 @@ public class notesAlgorithm implements Algorithm {
 							if (count[lanenum] == 2) {
 								ouString = "|";
 							} else {
-								if (lanenum % 2 != 0) {
-									paramCount++;
+								notesCount++;
+								if (lanenum % 2 != 0)
 									ouString = "■";
-								} else {
-									paramCount++;
+								else
 									ouString = "□";
-								}
 							}
 						} else if (lanenum > 40) {
 							if (note.getTrim() == 2) {
@@ -70,7 +67,7 @@ public class notesAlgorithm implements Algorithm {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		param = paramCount / barCount / maxNotesDifficulty * 100;
+		param = notesCount / barCount / maxNotesDifficulty * 100;
 		return param;
 	}
 
